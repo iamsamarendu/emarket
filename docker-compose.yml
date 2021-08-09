@@ -1,0 +1,111 @@
+version: '3.8'
+services:
+  company-api:
+    container_name: company-api
+    networks:
+      - emarket-network
+    build:
+      context: company-api
+      dockerfile: Dockerfile
+    image: company-api:latest
+    ports:
+      - 8081:8081
+    depends_on:
+      - mongodb
+    links:
+      - mongodb
+
+    stock-api:
+      container_name: stock-api
+      networks:
+        - emarket-network
+      build:
+        context: stock-api
+        dockerfile: Dockerfile
+      image: stock-api:latest
+      ports:
+        - 8070:8070
+      depends_on:
+        - mysql
+      #restart: on-failure
+      links:
+        - mysql
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    networks:
+      - emarket-network
+    ports:
+      - 27017:27017
+    restart: always
+
+  mysql:
+    platform: linux/x86_64
+    image: mysql:8.0.25
+    container_name: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    networks:
+      - emarket-network
+    restart: unless-stopped
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: stockdb
+      MYSQL_USER: stock-api-user
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: secret
+    healthcheck:
+      test: "mysqladmin ping -u root -p$${MYSQL_ROOT_PASSWORD}"
+      start_period: 30s
+
+  eureka-discovery:
+    container_name: 'eureka-discovery'
+    networks:
+      - emarket-network
+    build:
+      context: eureka-discovery
+      dockerfile: Dockerfile
+    image: eureka-discovery:latest
+    ports:
+      - 8075:8075
+
+  cloud-gateway:
+    container_name: 'cloud-gateway'
+    networks:
+      - emarket-network
+    build:
+      context: cloud-gateway
+      dockerfile: Dockerfile
+    image: cloud-gateway:latest
+    ports:
+      - 8060:8060
+  prometheus:
+    image: prom/prometheus:v2.27.1
+    container_name: prometheus
+    restart: unless-stopped
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - 9090:9090
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "9090" ]
+      start_period: 30s
+  grafana:
+    image: grafana/grafana:8.0.1
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    environment:
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    depends_on:
+      - prometheus
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "3000" ]
+      start_period: 30s
+networks:
+  emarket-network:
+    driver: bridge

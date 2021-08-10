@@ -31,12 +31,15 @@ public class StockManagerService {
         log.info("Add stock start");
         if (!StringUtils.isEmpty(companyCode)) {
             //check company existence
-            Company company = companyFeignClient.getCompanyDetails(companyCode);
-            log.info("Company details : " + company.toString());
+         //   Company company = companyFeignClient.getCompanyDetails(companyCode);
+         //   log.info("Company details : " + company.toString());
            // if(null!=company) {
+            log.info("Inside stock. Before mapper");
                 Stock stock = mapper.toEntity(stockDTO);
+            log.info("Inside stock. after mapper before save");
                 stock.setCompanyCode(companyCode);
                 repository.save(stock);
+            log.info("Inside stock. after save");
 //            } else {
 //                log.error("Company doesn't exists ");
 //                throw new Exception("Company doesn't exists");

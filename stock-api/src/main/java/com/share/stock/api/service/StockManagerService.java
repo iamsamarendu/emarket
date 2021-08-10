@@ -32,10 +32,15 @@ public class StockManagerService {
         if (!StringUtils.isEmpty(companyCode)) {
             //check company existence
             Company company = companyFeignClient.getCompanyDetails(companyCode);
-            log.info(company.toString());
-            Stock stock = mapper.toEntity(stockDTO);
-            stock.setCompanyCode(companyCode);
-            repository.save(stock);
+            log.info("Company details : " + company.toString());
+           // if(null!=company) {
+                Stock stock = mapper.toEntity(stockDTO);
+                stock.setCompanyCode(companyCode);
+                repository.save(stock);
+//            } else {
+//                log.error("Company doesn't exists ");
+//                throw new Exception("Company doesn't exists");
+//            }
         } else {
             log.error("Error occurred while adding stock :Company code cannot be empty ");
             throw new Exception("Company code cannot be empty");

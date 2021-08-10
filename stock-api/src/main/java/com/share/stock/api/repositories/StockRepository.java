@@ -14,8 +14,8 @@ import java.util.List;
 
 @Repository
 public interface StockRepository extends JpaRepository<Stock, Long> {
-    @Query("Select * from Stock where companyCode=:companyCode AND date(stockDateTime) >=:StartDate AND date(stockDateTime)<=!endDate")
+    @Query(value = "Select * from STOCK where companyCode=:companyCode AND date(stockDateTime) >=:startDate AND date(stockDateTime)<=:endDate", nativeQuery=true)
     List<Stock> findStock(@Param("companyCode") String companyCode, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
-    @Query("DELETE FROM Stock WHERE companyCode=:companyCode")
+    @Query(value = "DELETE FROM STOCK WHERE companyCode=:companyCode", nativeQuery=true)
     void deleteByCompany(@Param("companyCode") String companyCode);
 }

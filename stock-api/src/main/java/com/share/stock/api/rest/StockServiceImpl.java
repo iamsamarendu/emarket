@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 @Slf4j
 @RestController
-@RequestMapping("/stock")
+//@RequestMapping("/stock")
 public class StockServiceImpl implements StockService{
     @Autowired
     StockManagerService stockManagerService;

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 @Slf4j
 @RestController
-@RequestMapping("/company")
+//@RequestMapping("/company")
 public class CompanyServiceImpl implements CompanyService{
     @Autowired
     CompanyManagerService companyManagerService;

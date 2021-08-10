@@ -15,21 +15,21 @@ services:
     links:
       - mongodb
 
-    stock-api:
-      container_name: stock-api
-      networks:
-        - emarket-network
-      build:
-        context: stock-api
-        dockerfile: Dockerfile
-      image: stock-api:latest
-      ports:
-        - 8070:8070
-      depends_on:
-        - mysql
-      #restart: on-failure
-      links:
-        - mysql
+  stock-api:
+    container_name: stock-api
+    networks:
+      - emarket-network
+    build:
+      context: stock-api
+      dockerfile: Dockerfile
+    image: stock-api:latest
+    ports:
+      - 8070:8070
+    depends_on:
+      - mysql
+    #restart: on-failure
+    links:
+      - mysql
 
   mongodb:
     image: mongo:latest

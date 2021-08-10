@@ -13,11 +13,9 @@ import java.util.Collections;
 @Component
 public class StockApiFallbackFactory implements FallbackFactory<StockFeignClient> {
 
+
     @Override
     public StockFeignClient create(Throwable throwable) {
-        return stock -> {
-            log.error("Error occurred trying to fetch stocks from stock service", throwable);
-            return new ArrayList<>(Collections.emptyList());
-        };
+        return null;
     }
 }

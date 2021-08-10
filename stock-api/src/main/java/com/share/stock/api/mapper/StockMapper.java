@@ -12,17 +12,17 @@ import java.time.LocalDateTime;
 
 @Mapper
 public interface StockMapper {
-    @Mapping(source = "stockDateTime", target = "stockDateTime", qualifiedByName = "dateToTimestamp")
+    //@Mapping(source = "stockDateTime", target = "stockDateTime", qualifiedByName = "dateToTimestamp")
     StockDTO toDTO(Stock company);
-    @Mapping(source = "stockDateTime", target = "stockDateTime", qualifiedByName = "timestampToDate")
+  //  @Mapping(source = "stockDateTime", target = "stockDateTime", qualifiedByName = "timestampToDate")
     Stock toEntity(StockDTO companyDTO);
-    @Named("timestampToDate")
-    default Timestamp timestampToDate(LocalDateTime value){
-        return Timestamp.valueOf(value);
-    }
-    @Named("dateToTimestamp")
-    default LocalDateTime dateToTimestamp(Timestamp value){
-        return value.toLocalDateTime();
-    }
+//    @Named("timestampToDate")
+//    default Timestamp timestampToDate(LocalDateTime value){
+//        return Timestamp.valueOf(value);
+//    }
+//    @Named("dateToTimestamp")
+//    default LocalDateTime dateToTimestamp(Timestamp value){
+//        return value.toLocalDateTime();
+//    }
 
 }

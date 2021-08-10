@@ -15,8 +15,9 @@ public class Stock {
     private Long stockId;
     @NotBlank
     private Double stockPrice;
-    @Temporal(TemporalType.TIMESTAMP)
-    private Timestamp stockDateTime = Timestamp.valueOf(LocalDateTime.now());
+    @Basic
+//    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime stockDateTime = LocalDateTime.now();
     @NotBlank
     private String companyCode;
     private String currency;

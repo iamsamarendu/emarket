@@ -13,7 +13,7 @@ public class Stock {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long stockId;
-    @NotBlank
+    //@NotBlank
     private Double stockPrice;
     @Basic
 //    @Temporal(TemporalType.TIMESTAMP)

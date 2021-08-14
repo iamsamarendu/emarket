@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 @Slf4j
 @RestController
@@ -21,9 +22,10 @@ public class StockServiceImpl implements StockService{
         log.info("Add Stock started for Company:{}",companyCode);
         try {
             stockManagerService.addStock(stock, companyCode);
-            return new ResponseEntity("Company registered successfully", HttpStatus.CREATED);
+            return new ResponseEntity("Stock added", HttpStatus.CREATED);
         }catch (Exception e){
-            log.error("Error occurred while adding stock", e.getStackTrace());
+            log.error("Exception :" + e.getMessage());
+            log.error("Error occurred while adding stock"+ e.getStackTrace().toString());
             return new ResponseEntity("Error occurred while adding", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -36,11 +38,13 @@ public class StockServiceImpl implements StockService{
             List<StockDTO> list = stockManagerService.findStock(companyCode,startDate, endDate);
             return new ResponseEntity(list, HttpStatus.OK);
         }catch (Exception e){
-            log.error("Error occurred while finding stock", e.getStackTrace());
-            return new ResponseEntity("Error occurred while finding", HttpStatus.NOT_FOUND);
+            log.error("Exception : " + e.getMessage());
+
+            log.error("Error occurred while finding stock" ,e);
+            return new ResponseEntity("Error occurred while finding" + e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
-    @DeleteMapping("/delete/companyCode")
+    @DeleteMapping("/delete/{companyCode}")
     public ResponseEntity<String> deleteStock(@PathVariable String companyCode){
         log.info("Delete stock started");
         try {

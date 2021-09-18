@@ -7,11 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 @Slf4j
 @RestController
 //@RequestMapping("/company")
@@ -21,18 +25,18 @@ public class CompanyServiceImpl implements CompanyService{
 
     @Override
     @PostMapping(value = "/register")
-    public ResponseEntity<String> register(@Valid @RequestBody CompanyDTO company) {
+    public ResponseEntity<String> register(@Valid @RequestBody CompanyDTO company) throws Exception {
         log.info("Register start");
-        try{
+      //  try{
             System.out.println("Starting register : company req :-" + company.toString());
             companyManagerService.register(company);
             log.info("Registered succesfully {company}",company.toString());
             return new ResponseEntity("Company registered successfully", HttpStatus.CREATED);
-        }catch (Exception e){
-            log.error("Company register failed. Error : {}",e.getStackTrace());
-            System.out.println("Inside catch :" + e.getMessage());
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+//        }catch (Exception e){
+//            log.error("Company register failed. Error : {}",e.getStackTrace());
+//            System.out.println("Inside catch :" + e.getMessage());
+//            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+//        }
     }
     @Override
     @GetMapping("/info/{companyCode}")
@@ -77,5 +81,16 @@ public class CompanyServiceImpl implements CompanyService{
     @GetMapping("/")
     public String get(){
         return "Hello Company";
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+
+        ex.getBindingResult().getFieldErrors().forEach(error ->
+                errors.put(error.getField(), error.getDefaultMessage()));
+
+        return errors;
     }
 }

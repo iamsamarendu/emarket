@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
@@ -20,6 +21,7 @@ public class Stock {
     private LocalDateTime stockDateTime = LocalDateTime.now();
     @NotBlank
     private String companyCode;
+    @NotEmpty(message = "Currency cannot be empty")
     private String currency;
     private String type;
 }

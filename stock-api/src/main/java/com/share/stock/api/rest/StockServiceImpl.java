@@ -6,10 +6,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 @Slf4j
 @RestController
 //@RequestMapping("/stock")
@@ -18,16 +23,16 @@ public class StockServiceImpl implements StockService{
     StockManagerService stockManagerService;
     @Override
     @PostMapping("/add/{companyCode}")
-    public ResponseEntity<String> addStock(@RequestBody StockDTO stock, @PathVariable String companyCode) {
+    public ResponseEntity<String> addStock(@Valid @RequestBody StockDTO stock, @PathVariable String companyCode) throws Exception {
         log.info("Add Stock started for Company:{}",companyCode);
-        try {
+       // try {
             stockManagerService.addStock(stock, companyCode);
             return new ResponseEntity("Stock added", HttpStatus.CREATED);
-        }catch (Exception e){
-            log.error("Exception :" + e.getMessage());
-            log.error("Error occurred while adding stock"+ e.getStackTrace().toString());
-            return new ResponseEntity("Error occurred while adding", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+//        }catch (Exception e){
+//            log.error("Exception :" + e.getMessage());
+//            log.error("Error occurred while adding stock"+ e.getStackTrace().toString());
+//            return new ResponseEntity("Error occurred while adding", HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
     }
 
     @Override
@@ -58,5 +63,15 @@ public class StockServiceImpl implements StockService{
     @GetMapping("/")
     public String welcome(){
         return "Welcome to Stock";
+    }
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+
+        ex.getBindingResult().getFieldErrors().forEach(error ->
+                errors.put(error.getField(), error.getDefaultMessage()));
+
+        return errors;
     }
 }

@@ -1,24 +1,23 @@
 package com.share.company.api.repositories.entity;
 
-import com.mongodb.lang.NonNull;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "company")
+import javax.validation.constraints.NotEmpty;
+
+@DynamoDBTable(tableName = "company")
 @Data
 public class Company {
-    @NonNull
+    @NotEmpty(message = "Company name cannot be empty or null")
     private String companyName;
-
-    @Indexed(unique = true,name = "companycode_index")
+    @DynamoDBHashKey
+    @NotEmpty(message = "Company code cannot be empty or null")
     private String companyCode;
-    @NonNull
+    private String description;
     private String website;
     private String companyCEO;
     private String stockExchange;
-    @NonNull
     //@DecimalMin(value = "100000000",message = "Turnover for your company is too low.")
     private Double turnover;
 }

@@ -10,7 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class CompanyManagerService {
@@ -20,17 +23,16 @@ public class CompanyManagerService {
     CompanyMapper mapper;
     @Autowired
     StockFeignClient stockFeignClient;
-    public void register(CompanyDTO company) {
+    public void register(CompanyDTO company) throws Exception {
         System.out.println("Inside manager service");
-        Company com = new Company();
-        com.setCompanyCode(company.getCompanyCode());
-        com.setTurnover(company.getTurnover());
-        com.setWebsite(company.getWebsite());
-        com.setCompanyName(company.getCompanyName());
-        com.setCompanyCEO(company.getCompanyCEO());
-        com.setStockExchange(company.getStockExchange());
-        System.out.println("Before save repo");
-        companyRepository.save(com);
+        Company com = mapper.toEntity(company);
+        Company check = companyRepository.findByCompanyCode(com.getCompanyCode());
+        if(check == null){
+            companyRepository.save(com);
+        } else {
+           throw new Exception("Company already exists");
+        }
+
         System.out.println("After save repo");
     }
 
@@ -61,10 +63,8 @@ public class CompanyManagerService {
     }
 
     public List<CompanyDTO> getAllCompany() {
-        return companyRepository.findAll()
-                                    .stream()
-                                    .map(mapper::toDTO)
-                                    .collect(Collectors.toList());
+        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(companyRepository.findAll().iterator(),Spliterator.ORDERED), false)
+                    .map(mapper::toDTO).collect(Collectors.toList());
     }
     public boolean deleteCompany(String companyCode) throws Exception {
         if(!StringUtils.isEmpty(companyCode)) {

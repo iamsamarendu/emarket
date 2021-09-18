@@ -1,4 +1,5 @@
-FROM openjdk:11
+FROM openjdk:8-jdk-alpine
+RUN apk add --no-cache curl tar bash procps
 MAINTAINER samarendu
 WORKDIR /app
 # Add wait script to the image - script pulled from https://github.com/ufoscout/docker-compose-wait/releases/download/2.7.3/wait /wait

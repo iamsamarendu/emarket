@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 
 public interface StockService {
-    ResponseEntity<String> addStock(@RequestBody StockDTO stock, @PathVariable String companyCode);
+    ResponseEntity<String> addStock(@RequestBody StockDTO stock, @PathVariable String companyCode) throws Exception;
     public ResponseEntity<List<StockDTO>> getStock(@PathVariable String companyCode, @PathVariable String startDate, @PathVariable String endDate);
 }

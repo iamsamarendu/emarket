@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface CompanyService {
 
-    ResponseEntity<String> register(CompanyDTO company);
+    ResponseEntity<String> register(CompanyDTO company) throws Exception;
     ResponseEntity<CompanyDTO> getInfo(@PathVariable(value = "companyCode") String companyCode);
 
     ResponseEntity<List<CompanyDTO>> getAll();

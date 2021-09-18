@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@FeignClient(name="stock-api")
+@FeignClient(name="${STOCK_API:stock-api}")
 public interface StockFeignClient {
     @GetMapping("stock/get/{companyCode}/{startDate}/{endDate}")
     List<Stock> getStockDetails(@PathVariable String companyCode, @PathVariable String startDate, @PathVariable String endDate);

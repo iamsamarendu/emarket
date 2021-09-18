@@ -1,5 +1,9 @@
 package com.share.company.api.config;
 
+import com.netflix.appinfo.AmazonInfo;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.commons.util.InetUtils;
+import org.springframework.cloud.netflix.eureka.EurekaInstanceConfigBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.PathSelectors;
@@ -8,6 +12,7 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 
 @Configuration
+@Slf4j
 public class SwaggerConfig {
     @Bean
     public Docket api() {
